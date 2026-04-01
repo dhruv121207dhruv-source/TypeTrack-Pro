@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TypeTrack Pro - Master your typing speed and accuracy with real-time feedback, fun typing games, progress tracking, and beautiful analytics.">
+  <title>TypeTrack Pro — Typing Practice, Games & Speed Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Splash Loader -->
+  <div id="splash-loader">
+    <div class="splash-content">
+      <div class="splash-icon">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="url(#splashGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <defs><linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs>
+          <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/>
+        </svg>
+      </div>
+      <h1 class="splash-title">TypeTrack Pro</h1>
+      <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="main-nav">
+    <div class="nav-brand">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/>
+      </svg>
+      <span>TypeTrack <strong>Pro</strong></span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" data-view="practice" id="nav-practice">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 16h10"/></svg>
+        <span>Practice</span>
+      </button>
+      <button class="nav-link" data-view="games" id="nav-games">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4m-2-2v4m6-1h.01m4 0h.01"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+        <span>Games</span>
+      </button>
+      <button class="nav-link" data-view="dashboard" id="nav-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-link" data-view="history" id="nav-history">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>History</span>
+      </button>
+    </div>
+    <div class="nav-actions">
+      <button id="profile-btn" class="icon-btn" title="Profile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button id="sound-toggle" class="icon-btn" title="Toggle Sound">
+        <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <svg class="sound-off hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      </button>
+      <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+        <svg class="theme-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="theme-light hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button id="auth-nav-btn" class="btn-primary btn-sm login-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; margin-left: 0.5rem;">Login</button>
+      <div id="user-display" class="user-display hidden">
+        <span id="user-name-label"></span>
+        <button id="logout-btn" class="icon-btn" title="Logout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======= PRACTICE VIEW ======= -->
+  <main id="view-practice" class="view active">
+    <div class="practice-container">
+      <!-- Settings Bar -->
+      <div class="settings-bar" id="settings-bar">
+        <div class="setting-group">
+          <label class="setting-label">Time</label>
+          <div class="pill-group" id="time-options">
+            <button class="pill" data-time="30">30s</button>
+            <button class="pill active" data-time="60">1 min</button>
+            <button class="pill" data-time="300">5 min</button>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Difficulty</label>
+          <div class="pill-group" id="difficulty-options">
+            <button class="pill active" data-difficulty="easy">Easy</button>
+            <button class="pill" data-difficulty="medium">Medium</button>
+            <button class="pill" data-difficulty="hard">Hard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Stats -->
+      <div class="live-stats" id="live-stats">
+        <div class="stat-card" id="stat-timer">
+          <div class="stat-value" id="timer-display">60</div>
+          <div class="stat-label">seconds</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="wpm-display">0</div>
+          <div class="stat-label">WPM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="accuracy-display">100%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="errors-display">0</div>
+          <div class="stat-label">Errors</div>
+        </div>
+      </div>
+
+      <!-- Text Display -->
+      <div class="text-display-wrapper">
+        <div class="text-display" id="text-display"></div>
+      </div>
+
+      <!-- Input -->
+      <div class="input-wrapper">
+        <input type="text" id="typing-input" class="typing-input" placeholder="Start typing here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button id="restart-btn" class="restart-btn" title="Restart (Tab + Enter)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+      </div>
+      <p class="hint-text">Press <kbd>Tab</kbd> + <kbd>Enter</kbd> to restart</p>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal-overlay" id="results-modal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>Session Complete!</h2>
+          <div class="modal-trophy">🏆</div>
+        </div>
+        <div class="results-grid">
+          <div class="result-item">
+            <div class="result-value" id="result-wpm">0</div>
+            <div class="result-label">WPM</div>
+          </div>
+          <div class="result-item">
+            <div class="result-value" id="result-accuracy">0%</div>
+            <div class="result-label">Accuracy</div>
+          </div>
+          <div class="result-item">
+            <div class="result-value" id="result-chars">0</div>
+            <div class="result-label">Characters</div>
+          </div>
+          <div class="result-item">
+            <div class="result-value" id="result-errors">0</div>
+            <div class="result-label">Errors</div>
+          </div>
+          <div class="result-item">
+            <div class="result-value" id="result-time">0s</div>
+            <div class="result-label">Duration</div>
+          </div>
+          <div class="result-item">
+            <div class="result-value" id="result-raw">0</div>
+            <div class="result-label">Raw WPM</div>
+          </div>
+        </div>
+        <div class="result-chart-wrap">
+          <canvas id="result-chart"></canvas>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" id="modal-restart">Try Again</button>
+          <button class="btn-secondary" id="modal-dashboard">View Dashboard</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ======= AUTH VIEW ======= -->
+  <main id="view-auth" class="view">
+    <div class="auth-container">
+      <div class="auth-card anim-in">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Login</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form">
+          <div class="form-header">
+            <h2>Welcome Back</h2>
+            <p>Login to sync your progress across devices</p>
+          </div>
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+          <div class="form-error" id="login-error"></div>
+          <button type="submit" class="btn-primary w-full">Login to TypeTrack</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form hidden">
+          <div class="form-header">
+            <h2>Create Account</h2>
+            <p>Join TypeTrack Pro and master your typing</p>
+          </div>
+          <div class="form-group">
+            <label for="reg-username">Username</label>
+            <input type="text" id="reg-username" placeholder="Choose a username" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-email">Email Address</label>
+            <input type="email" id="reg-email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" placeholder="Min. 8 characters" required>
+          </div>
+          <div class="form-error" id="reg-error"></div>
+          <button type="submit" class="btn-primary w-full">Sign Up</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- ======= GAMES VIEW ======= -->
+  <main id="view-games" class="view">
+    <div class="games-container">
+      <!-- Game Hub -->
+      <div id="game-hub">
+        <div class="dash-header">
+          <h1>🎮 Typing Games</h1>
+          <div class="pill-group" id="game-level-options">
+            <button class="pill active" data-level="easy">Easy</button>
+            <button class="pill" data-level="medium">Medium</button>
+            <button class="pill" data-level="hard">Hard</button>
+          </div>
+        </div>
+        
+        <!-- Game Selector Cards -->
+        <div class="game-cards-grid">
+          <div class="game-select-card balloon-card" data-game="balloon">
+            <div class="game-card-icon">🎈</div>
+            <h3>Balloon Pop</h3>
+            <p>Type letters & words to pop rising balloons before they escape!</p>
+            <div class="game-card-meta">
+              <span class="game-tag">Reflexes</span>
+              <span class="game-tag">Speed</span>
+            </div>
+            <button class="btn-play">Play Now</button>
+          </div>
+          <div class="game-select-card stack-card" data-game="stack">
+            <div class="game-card-icon">🧱</div>
+            <h3>Stack Typing</h3>
+            <p>Build the tallest tower by typing words correctly to stack blocks!</p>
+            <div class="game-card-meta">
+              <span class="game-tag">Precision</span>
+              <span class="game-tag">Focus</span>
+            </div>
+            <button class="btn-play">Play Now</button>
+          </div>
+          <div class="game-select-card shooter-card" data-game="shooter">
+            <div class="game-card-icon">🔫</div>
+            <h3>Word Shooter</h3>
+            <p>Shoot down words flying across the screen by typing them fast!</p>
+            <div class="game-card-meta">
+              <span class="game-tag">Speed</span>
+              <span class="game-tag">Accuracy</span>
+            </div>
+            <button class="btn-play">Play Now</button>
+          </div>
+          <div class="game-select-card timeattack-card" data-game="timeattack">
+            <div class="game-card-icon">⏱️</div>
+            <h3>Time Attack</h3>
+            <p>Type as many correct words as possible within the time limit!</p>
+            <div class="game-card-meta">
+              <span class="game-tag">Speed</span>
+              <span class="game-tag">Endurance</span>
+            </div>
+            <button class="btn-play">Play Now</button>
+          </div>
+          <div class="game-select-card survival-card" data-game="survival">
+            <div class="game-card-icon">💀</div>
+            <h3>Survival Mode</h3>
+            <p>Endless typing challenge. Difficulty increases — how long can you survive?</p>
+            <div class="game-card-meta">
+              <span class="game-tag">Endurance</span>
+              <span class="game-tag">Challenge</span>
+            </div>
+            <button class="btn-play">Play Now</button>
+          </div>
+          <div class="game-select-card leaderboard-card" data-game="leaderboard">
+            <div class="game-card-icon">🏆</div>
+            <h3>Leaderboard</h3>
+            <p>Check your best scores across all games and difficulty levels!</p>
+            <div class="game-card-meta">
+              <span class="game-tag">Stats</span>
+              <span class="game-tag">Rankings</span>
+            </div>
+            <button class="btn-play">View Scores</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === Individual Game Arenas (shown when a game is active) === -->
+
+      <!-- Balloon Pop Game -->
+      <div id="game-balloon" class="game-arena" style="display:none">
+        <div class="game-top-bar">
+          <button class="btn-back-hub" id="balloon-back">← Back</button>
+          <h2>🎈 Balloon Pop</h2>
+          <div class="game-stats-bar">
+            <div class="gs"><span id="balloon-score">0</span><small>Score</small></div>
+            <div class="gs"><span id="balloon-lives">5</span><small>Lives</small></div>
+            <div class="gs"><span id="balloon-level">1</span><small>Level</small></div>
+          </div>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="balloon-canvas"></canvas>
+        </div>
+        <div class="game-input-bar">
+          <input type="text" id="balloon-input" class="game-input" placeholder="Type the word..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+      </div>
+
+      <!-- Stack Typing Game -->
+      <div id="game-stack" class="game-arena" style="display:none">
+        <div class="game-top-bar">
+          <button class="btn-back-hub" id="stack-back">← Back</button>
+          <h2>🧱 Stack Typing</h2>
+          <div class="game-stats-bar">
+            <div class="gs"><span id="stack-score">0</span><small>Score</small></div>
+            <div class="gs"><span id="stack-height">0</span><small>Height</small></div>
+            <div class="gs"><span id="stack-combo">0</span><small>Combo</small></div>
+          </div>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="stack-canvas"></canvas>
+        </div>
+        <div class="game-input-bar">
+          <div class="stack-word-display" id="stack-word-display">Start typing...</div>
+          <input type="text" id="stack-input" class="game-input" placeholder="Type the word..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+      </div>
+
+      <!-- Word Shooter Game -->
+      <div id="game-shooter" class="game-arena" style="display:none">
+        <div class="game-top-bar">
+          <button class="btn-back-hub" id="shooter-back">← Back</button>
+          <h2>🔫 Word Shooter</h2>
+          <div class="game-stats-bar">
+            <div class="gs"><span id="shooter-score">0</span><small>Score</small></div>
+            <div class="gs"><span id="shooter-lives">5</span><small>Lives</small></div>
+            <div class="gs"><span id="shooter-streak">0</span><small>Streak</small></div>
+          </div>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="shooter-canvas"></canvas>
+        </div>
+        <div class="game-input-bar">
+          <input type="text" id="shooter-input" class="game-input" placeholder="Type words to shoot..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+      </div>
+
+      <!-- Time Attack Game -->
+      <div id="game-timeattack" class="game-arena" style="display:none">
+        <div class="game-top-bar">
+          <button class="btn-back-hub" id="timeattack-back">← Back</button>
+          <h2>⏱️ Time Attack</h2>
+          <div class="game-stats-bar">
+            <div class="gs glow-timer"><span id="ta-timer">60</span><small>Seconds</small></div>
+            <div class="gs"><span id="ta-score">0</span><small>Words</small></div>
+            <div class="gs"><span id="ta-wpm">0</span><small>WPM</small></div>
+          </div>
+        </div>
+        <div class="ta-play-area">
+          <div class="ta-word-big" id="ta-current-word">Press Enter to start</div>
+          <input type="text" id="ta-input" class="game-input game-input-lg" placeholder="Type the word..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <div class="ta-word-queue" id="ta-queue"></div>
+        </div>
+      </div>
+
+      <!-- Survival Mode -->
+      <div id="game-survival" class="game-arena" style="display:none">
+        <div class="game-top-bar">
+          <button class="btn-back-hub" id="survival-back">← Back</button>
+          <h2>💀 Survival Mode</h2>
+          <div class="game-stats-bar">
+            <div class="gs"><span id="sv-score">0</span><small>Score</small></div>
+            <div class="gs"><span id="sv-time">0:00</span><small>Survived</small></div>
+            <div class="gs"><span id="sv-speed">1.0x</span><small>Speed</small></div>
+            <div class="gs"><span id="sv-lives">3</span><small>Lives</small></div>
+          </div>
+        </div>
+        <div class="game-canvas-wrap">
+          <canvas id="survival-canvas"></canvas>
+        </div>
+        <div class="game-input-bar">
+          <input type="text" id="survival-input" class="game-input" placeholder="Type to survive..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div id="game-leaderboard" class="game-arena" style="display:none">
+        <div class="game-top-bar">
+          <button class="btn-back-hub" id="lb-back">← Back</button>
+          <h2>🏆 Leaderboard</h2>
+          <div class="pill-group" id="lb-game-filter">
+            <button class="pill active" data-lbgame="all">All</button>
+            <button class="pill" data-lbgame="balloon">Balloon</button>
+            <button class="pill" data-lbgame="stack">Stack</button>
+            <button class="pill" data-lbgame="shooter">Shooter</button>
+            <button class="pill" data-lbgame="timeattack">Time Atk</button>
+            <button class="pill" data-lbgame="survival">Survival</button>
+          </div>
+        </div>
+        <div class="lb-content">
+          <table class="recent-table lb-table" id="lb-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Game</th>
+                <th>Score</th>
+                <th>Level</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="lb-tbody"></tbody>
+          </table>
+          <div class="empty-state" id="lb-empty">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4m-2-2v4m6-1h.01m4 0h.01"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+            <p>No game scores yet. Play some games to see your scores here!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Over Modal -->
+      <div class="modal-overlay" id="game-over-modal">
+        <div class="modal-card game-over-card">
+          <div class="modal-header">
+            <h2 id="go-title">Game Over!</h2>
+            <div class="modal-trophy" id="go-emoji">💥</div>
+          </div>
+          <div class="results-grid" id="go-stats"></div>
+          <div class="modal-actions">
+            <button class="btn-primary" id="go-retry">Play Again</button>
+            <button class="btn-secondary" id="go-hub">Back to Games</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ======= DASHBOARD VIEW ======= -->
+  <main id="view-dashboard" class="view">
+    <div class="dashboard-container">
+      <div class="dash-header">
+        <h1>Progress Dashboard</h1>
+        <div class="period-selector">
+          <button class="pill active" data-period="daily" id="period-daily">Daily</button>
+          <button class="pill" data-period="weekly" id="period-weekly">Weekly</button>
+          <button class="pill" data-period="all" id="period-all">All Time</button>
+        </div>
+      </div>
+      <!-- Summary Cards -->
+      <div class="summary-cards">
+        <div class="summary-card gradient-1">
+          <div class="summary-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M11 19c-1.7 0-3-1.3-3-3v-2h8v2c0 1.7-1.3 3-3 3h-2z"/><path d="M12 22v-3"/></svg>
+          </div>
+          <div class="summary-data">
+            <div class="summary-value" id="dash-best-wpm">0</div>
+            <div class="summary-label">Best WPM</div>
+          </div>
+        </div>
+        <div class="summary-card gradient-2">
+          <div class="summary-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="summary-data">
+            <div class="summary-value" id="dash-avg-wpm">0</div>
+            <div class="summary-label">Avg WPM</div>
+          </div>
+        </div>
+        <div class="summary-card gradient-3">
+          <div class="summary-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <div class="summary-data">
+            <div class="summary-value" id="dash-avg-acc">0%</div>
+            <div class="summary-label">Avg Accuracy</div>
+          </div>
+        </div>
+        <div class="summary-card gradient-4">
+          <div class="summary-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="summary-data">
+            <div class="summary-value" id="dash-total-time">0m</div>
+            <div class="summary-label">Total Practice</div>
+          </div>
+        </div>
+        <div class="summary-card gradient-5">
+          <div class="summary-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="summary-data">
+            <div class="summary-value" id="dash-sessions">0</div>
+            <div class="summary-label">Sessions</div>
+          </div>
+        </div>
+      </div>
+      <!-- Charts -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>WPM Over Time</h3>
+          <canvas id="chart-wpm"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Accuracy Over Time</h3>
+          <canvas id="chart-accuracy"></canvas>
+        </div>
+      </div>
+      <!-- Recent Performance -->
+      <div class="chart-card recent-card">
+        <h3>Recent Sessions</h3>
+        <div class="recent-table-wrap">
+          <table class="recent-table" id="recent-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>WPM</th>
+                <th>Accuracy</th>
+                <th>Errors</th>
+                <th>Difficulty</th>
+              </tr>
+            </thead>
+            <tbody id="recent-tbody"></tbody>
+          </table>
+          <div class="empty-state" id="dash-empty">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 16h10"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01"/></svg>
+            <p>No sessions yet. Start practicing to see your progress!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ======= HISTORY VIEW ======= -->
+  <main id="view-history" class="view">
+    <div class="history-container">
+      <div class="dash-header">
+        <h1>Session History</h1>
+        <button class="btn-danger" id="clear-history-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Clear All
+        </button>
+      </div>
+      <!-- Filters -->
+      <div class="history-filters">
+        <div class="filter-group">
+          <label>Date Range</label>
+          <select id="history-date-filter">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Difficulty</label>
+          <select id="history-diff-filter">
+            <option value="all">All</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Sort By</label>
+          <select id="history-sort">
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="wpm-desc">Highest WPM</option>
+            <option value="wpm-asc">Lowest WPM</option>
+            <option value="acc-desc">Highest Accuracy</option>
+          </select>
+        </div>
+      </div>
+      <!-- History Cards -->
+      <div class="history-list" id="history-list"></div>
+      <div class="empty-state" id="history-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <p>No session history yet. Complete a typing session to see it here!</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ======= PROFILE MODAL ======= -->
+  <div class="modal-overlay" id="profile-modal">
+    <div class="modal-card profile-card">
+      <div class="modal-header">
+        <h2>Your Profile</h2>
+        <button class="icon-btn profile-close" id="profile-close">✕</button>
+      </div>
+      <div class="profile-body">
+        <div class="profile-avatar" id="profile-avatar">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="profile-name-group">
+          <label class="setting-label">Display Name</label>
+          <input type="text" id="profile-name-input" class="typing-input" placeholder="Enter your name..." value="">
+        </div>
+        <div class="profile-stats-row">
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="p-total-sessions">0</div>
+            <div class="profile-stat-lbl">Sessions</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="p-best-wpm">0</div>
+            <div class="profile-stat-lbl">Best WPM</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="p-avg-acc">—</div>
+            <div class="profile-stat-lbl">Avg Accuracy</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="p-total-time">0m</div>
+            <div class="profile-stat-lbl">Total Time</div>
+          </div>
+        </div>
+        <div class="profile-joined">
+          <small>Member since <span id="p-joined">—</span></small>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="profile-save">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="games.js"></script>
+</body>
+</html>
