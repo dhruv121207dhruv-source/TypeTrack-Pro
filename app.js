@@ -117,6 +117,17 @@ const dom = {
   registerForm: $('#register-form'),
   loginError: $('#login-error'),
   registerError: $('#reg-error'),
+  navLeaderboard: $('#nav-leaderboard'),
+  viewLeaderboard: $('#view-leaderboard'),
+  lbCatTyping: $('#lb-cat-typing'),
+  lbCatGames: $('#lb-cat-games'),
+  lbTypingFilters: $('#lb-typing-filters'),
+  lbGamesFilters: $('#lb-games-filters'),
+  lbMainTable: $('#lb-main-table'),
+  lbThead: $('#lb-thead'),
+  lbTbodyMain: $('#lb-tbody-main'),
+  lbMainEmpty: $('#lb-main-empty'),
+  lbLoader: $('#lb-loader'),
 };
 
 // ─── Sound Engine ──────────────────────────────────────────
@@ -389,6 +400,7 @@ function switchView(viewName) {
   if(viewName==='practice')dom.typingInput.focus();
   if(viewName==='games'&&typeof initGameHub==='function')initGameHub();
   if(viewName==='auth') initAuthView();
+  if(viewName==='leaderboard') initLeaderboardView();
 }
 
 function initAuthView() {
@@ -525,6 +537,130 @@ dom.loginForm.addEventListener('submit', handleLogin);
 dom.registerForm.addEventListener('submit', handleRegister);
 dom.logoutBtn.addEventListener('click', logoutUser);
 dom.authNavBtn.addEventListener('click', () => switchView('auth'));
+dom.navLeaderboard.addEventListener('click', () => switchView('leaderboard'));
+
+// ─── Leaderboard Logic ─────────────────────────────────────
+function initLeaderboardView() {
+  const cat = $('.category-selector .pill.active').dataset.lbcat;
+  updateLeaderboardUI(cat);
+  refreshLeaderboard();
+}
+
+function updateLeaderboardUI(cat) {
+  if (cat === 'typing') {
+    dom.lbTypingFilters.classList.remove('hidden');
+    dom.lbGamesFilters.classList.add('hidden');
+    $('#lb-current-cat').textContent = 'Showing: Typing Rankings';
+  } else {
+    dom.lbTypingFilters.classList.add('hidden');
+    dom.lbGamesFilters.classList.remove('hidden');
+    $('#lb-current-cat').textContent = 'Showing: Gaming Rankings';
+  }
+}
+
+async function refreshLeaderboard() {
+  const cat = $('.category-selector .pill.active').dataset.lbcat;
+  const scope = $(cat === 'typing' ? '#lb-typing-scope .pill.active' : '#lb-game-scope .pill.active').dataset.lbscope;
+  
+  dom.lbLoader.classList.remove('hidden');
+  dom.lbMainEmpty.classList.add('hidden');
+  dom.lbTbodyMain.innerHTML = '';
+
+  if (cat === 'typing') {
+    const diff = $('#lb-typing-diff .pill.active').dataset.lbdiff;
+    await buildTypingLeaderboard(scope, diff);
+  } else {
+    const game = $('#lb-game-selector .pill.active').dataset.lbgame;
+    if (typeof buildGameLeaderboard === 'function') {
+      await buildGameLeaderboard(scope, game);
+    }
+  }
+  dom.lbLoader.classList.add('hidden');
+}
+
+async function buildTypingLeaderboard(scope, diff) {
+  let data = [];
+  $('#lb-current-filter').textContent = diff === 'all' ? 'All Difficulties' : diff.charAt(0).toUpperCase() + diff.slice(1);
+  
+  // Header
+  dom.lbThead.innerHTML = `<tr><th>Rank</th><th>User</th><th>WPM</th><th>Accuracy</th><th>Date</th></tr>`;
+
+  if (scope === 'global' && window.fb) {
+    try {
+      let q;
+      const ref = window.fb.collection(window.fb.db, 'sessions');
+      if (diff === 'all') {
+        q = window.fb.query(ref, window.fb.orderBy('wpm', 'desc'), window.fb.limit(50));
+      } else {
+        q = window.fb.query(ref, window.fb.where('difficulty', '==', diff), window.fb.orderBy('wpm', 'desc'), window.fb.limit(50));
+      }
+      const snap = await window.fb.getDocs(q);
+      snap.forEach(doc => {
+        const d = doc.data();
+        data.push({
+          username: d.username || (d.email ? d.email.split('@')[0] : 'Legend'),
+          wpm: d.wpm,
+          accuracy: d.accuracy,
+          date: d.date,
+          uid: d.uid
+        });
+      });
+    } catch (e) { console.error('Global typing error:', e); }
+  } else {
+    // Local
+    data = [...state.sessions];
+    if (diff !== 'all') data = data.filter(s => s.difficulty === diff);
+    data.sort((a,b) => b.wpm - a.wpm);
+    data = data.slice(0, 50).map(s => ({
+      username: state.profile.name || 'You',
+      wpm: s.wpm,
+      accuracy: s.accuracy,
+      date: s.date,
+      isLocal: true
+    }));
+  }
+
+  renderToMainLB(data);
+}
+
+function renderToMainLB(data) {
+  if (!data || data.length === 0) {
+    dom.lbMainEmpty.classList.remove('hidden');
+    return;
+  }
+
+  dom.lbTbodyMain.innerHTML = data.map((s, i) => {
+    const rank = i + 1;
+    const rankClass = rank === 1 ? 'lb-rank-1' : rank === 2 ? 'lb-rank-2' : rank === 3 ? 'lb-rank-3' : '';
+    const isMe = state.user && s.uid === state.user.uid;
+    const rowClass = isMe ? 'lb-row-highlight' : '';
+    const date = new Date(s.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    
+    return `<tr class="${rowClass}">
+      <td><span class="lb-rank ${rankClass}">${rank}</span></td>
+      <td style="font-weight:600">${s.username}</td>
+      <td class="td-wpm">${s.wpm || s.score}</td>
+      <td class="td-acc acc-${(s.accuracy||0)>=95?'high':(s.accuracy||0)>=80?'mid':'low'}">${s.accuracy ? s.accuracy+'%' : (s.level || '—')}</td>
+      <td style="color:var(--text-muted)">${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+// Event Listeners for LB filters
+$$('.category-selector .pill').forEach(btn => btn.addEventListener('click', () => {
+  $$('.category-selector .pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateLeaderboardUI(btn.dataset.lbcat);
+  refreshLeaderboard();
+}));
+
+$$('.lb-filters .pill').forEach(btn => btn.addEventListener('click', (e) => {
+  const group = e.target.closest('.pill-group');
+  if (!group) return;
+  group.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  refreshLeaderboard();
+}));
 
 const googleLoginBtn = $('#google-login-btn');
 if (googleLoginBtn) googleLoginBtn.addEventListener('click', handleGoogleLogin);
