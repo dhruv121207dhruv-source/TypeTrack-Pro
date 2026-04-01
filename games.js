@@ -22,7 +22,12 @@ $$('.game-select-card').forEach(card => {
   card.addEventListener('click', () => {
     const game = card.dataset.game;
     $('#game-hub').style.display = 'none';
-    if (game === 'leaderboard') { showLeaderboard(); return; }
+    if (game === 'leaderboard') { 
+      switchView('leaderboard'); 
+      // Switch categories if needed
+      $('#lb-cat-games').click();
+      return; 
+    }
     $(`#game-${game}`).style.display = '';
     sound.init();
     if (game === 'balloon') startBalloonGame();
@@ -34,8 +39,9 @@ $$('.game-select-card').forEach(card => {
 });
 
 // Back buttons
-['balloon','stack','shooter','timeattack','survival','lb'].forEach(id => {
-  $(`#${id}-back`).addEventListener('click', () => {
+['balloon','stack','shooter','timeattack','survival'].forEach(id => {
+  const btn = $(`#${id}-back`);
+  if (btn) btn.addEventListener('click', () => {
     stopAllGames();
     initGameHub();
   });
@@ -72,6 +78,12 @@ function showGameOver(game, emoji, stats) {
   $('#go-hub').onclick = () => {
     $('#game-over-modal').classList.remove('active');
     initGameHub();
+  };
+  $('#go-leaderboard').onclick = () => {
+    $('#game-over-modal').classList.remove('active');
+    switchView('leaderboard');
+    $(`#lb-cat-games`).click();
+    $(`[data-lbgame="${game}"]`).click();
   };
 }
 
@@ -575,20 +587,17 @@ async function syncScoreWithBackend(scoreData) {
 
 function getRandomWord(level) { const bank = GAME_WORDS[level || state.gameLevel]; return bank[Math.floor(Math.random() * bank.length)]; }
 
-// ─── LEADERBOARD ───────────────────────────────────────────
-function showLeaderboard() {
-  $('#game-leaderboard').style.display = '';
-  buildLeaderboard('all');
-}
+// ─── LEADERBOARD REFACTOR ──────────────────────────────────
+async function buildGameLeaderboard(scope, filter) {
+  let data = [];
+  const gameNames = { balloon: 'Balloon Pop', stack: 'Stack Typing', shooter: 'Word Shooter', timeattack: 'Time Attack', survival: 'Survival Mode' };
+  
+  $('#lb-current-filter').textContent = filter === 'all' ? 'All Games' : gameNames[filter] || filter;
 
-$$('#lb-game-filter .pill').forEach(btn => btn.addEventListener('click', () => {
-  $$('#lb-game-filter .pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  buildLeaderboard(btn.dataset.lbgame);
-}));
+  // Header
+  dom.lbThead.innerHTML = `<tr><th>Rank</th><th>User</th><th>Score</th><th>Mode</th><th>Date</th></tr>`;
 
-async function buildLeaderboard(filter) {
-  if (state.isLoggedIn && window.fb) {
+  if (scope === 'global' && window.fb) {
     try {
       let q;
       const scoresRef = window.fb.collection(window.fb.db, 'scores');
@@ -599,54 +608,35 @@ async function buildLeaderboard(filter) {
       }
       
       const querySnapshot = await window.fb.getDocs(q);
-      const globalData = [];
-      querySnapshot.forEach(doc => globalData.push(doc.data()));
-      
-      renderLeaderboard(globalData, true);
-      return;
+      querySnapshot.forEach(doc => {
+        const d = doc.data();
+        data.push({
+          username: d.username || 'Anon',
+          score: d.score,
+          level: d.level,
+          date: d.date,
+          game: d.game,
+          uid: d.uid
+        });
+      });
     } catch (err) {
-      console.error('Error fetching global leaderboard:', err);
+      console.error('Error fetching global game leaderboard:', err);
     }
+  } else {
+    // Local fallback
+    data = [...state.gameScores];
+    if (filter !== 'all') data = data.filter(s => s.game === filter);
+    data.sort((a, b) => b.score - a.score);
+    data = data.slice(0, 50).map(s => ({
+      username: state.profile.name || 'You',
+      score: s.score,
+      level: s.level,
+      date: s.date,
+      isLocal: true
+    }));
   }
 
-  // Fallback to local scores
-  let data = [...state.gameScores];
-  if (filter !== 'all') data = data.filter(s => s.game === filter);
-  data.sort((a, b) => b.score - a.score);
-  data = data.slice(0, 20);
-  renderLeaderboard(data, false);
-}
-
-function renderLeaderboard(data, isGlobal) {
-  if (!data || data.length === 0) {
-    $('#lb-tbody').innerHTML = '';
-    $('#lb-empty').style.display = '';
-    return;
+  if (typeof renderToMainLB === 'function') {
+    renderToMainLB(data);
   }
-  $('#lb-empty').style.display = 'none';
-  const gameNames = { balloon: '🎈 Balloon', stack: '🧱 Stack', shooter: '🔫 Shooter', timeattack: '⏱️ Time Atk', survival: '💀 Survival' };
-
-  $('#lb-tbody').innerHTML = data.map((s, i) => {
-    let dateStr = '—';
-    if (s.date || s.created_at) {
-      const d = new Date(s.date || s.created_at);
-      dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }
-
-    let rankClass = '';
-    if (i === 0) rankClass = 'lb-rank-1';
-    else if (i === 1) rankClass = 'lb-rank-2';
-    else if (i === 2) rankClass = 'lb-rank-3';
-
-    // In global mode, show the username. In local mode, show the game name if filter is 'all'.
-    const nameDisplay = isGlobal ? (s.username || 'Anon') : (gameNames[s.game] || s.game);
-
-    return `<tr>
-      <td><span class="lb-rank ${rankClass}">${i + 1}</span></td>
-      <td>${nameDisplay}</td>
-      <td class="td-wpm">${s.score}</td>
-      <td><span class="diff-badge diff-${s.level}">${s.level}</span></td>
-      <td style="color:var(--text-muted)">${dateStr}</td>
-    </tr>`;
-  }).join('');
 }
