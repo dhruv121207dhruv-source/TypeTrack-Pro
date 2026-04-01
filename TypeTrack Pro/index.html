@@ -1,74 +1,139 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="TypeTrack Pro - Master your typing speed and accuracy with real-time feedback, fun typing games, progress tracking, and beautiful analytics.">
+  <meta name="description"
+    content="TypeTrack Pro - Master your typing speed and accuracy with real-time feedback, fun typing games, progress tracking, and beautiful analytics.">
   <title>TypeTrack Pro — Typing Practice, Games & Speed Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <!-- Splash Loader -->
   <div id="splash-loader">
     <div class="splash-content">
       <div class="splash-icon">
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="url(#splashGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <defs><linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs>
-          <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/>
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="url(#splashGrad)" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6366f1" />
+              <stop offset="100%" stop-color="#a78bfa" />
+            </linearGradient>
+          </defs>
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10" />
         </svg>
       </div>
       <h1 class="splash-title">TypeTrack Pro</h1>
-      <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+      <div class="splash-bar">
+        <div class="splash-bar-fill"></div>
+      </div>
     </div>
   </div>
 
   <!-- Navigation -->
   <nav id="main-nav">
     <div class="nav-brand">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10" />
       </svg>
       <span>TypeTrack <strong>Pro</strong></span>
     </div>
     <div class="nav-links">
       <button class="nav-link active" data-view="practice" id="nav-practice">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 16h10"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="M7 16h10" />
+        </svg>
         <span>Practice</span>
       </button>
       <button class="nav-link" data-view="games" id="nav-games">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4m-2-2v4m6-1h.01m4 0h.01"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 12h4m-2-2v4m6-1h.01m4 0h.01" />
+          <rect x="2" y="6" width="20" height="12" rx="2" />
+        </svg>
         <span>Games</span>
       </button>
       <button class="nav-link" data-view="dashboard" id="nav-dashboard">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18" />
+          <path d="m19 9-5 5-4-4-3 3" />
+        </svg>
         <span>Dashboard</span>
       </button>
       <button class="nav-link" data-view="history" id="nav-history">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
         <span>History</span>
       </button>
     </div>
     <div class="nav-actions">
       <button id="profile-btn" class="icon-btn" title="Profile">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
       </button>
       <button id="sound-toggle" class="icon-btn" title="Toggle Sound">
-        <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-        <svg class="sound-off hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+        </svg>
+        <svg class="sound-off hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+          <line x1="23" y1="9" x2="17" y2="15" />
+          <line x1="17" y1="9" x2="23" y2="15" />
+        </svg>
       </button>
       <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
-        <svg class="theme-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="theme-light hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="theme-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="theme-light hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
       </button>
-      <button id="auth-nav-btn" class="btn-primary btn-sm login-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; margin-left: 0.5rem;">Login</button>
+      <button id="auth-nav-btn" class="btn-primary btn-sm login-btn"
+        style="padding: 0.5rem 1rem; font-size: 0.85rem; margin-left: 0.5rem;">Login</button>
       <div id="user-display" class="user-display hidden">
         <span id="user-name-label"></span>
         <button id="logout-btn" class="icon-btn" title="Logout">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
         </button>
       </div>
     </div>
@@ -124,9 +189,14 @@
 
       <!-- Input -->
       <div class="input-wrapper">
-        <input type="text" id="typing-input" class="typing-input" placeholder="Start typing here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <input type="text" id="typing-input" class="typing-input" placeholder="Start typing here..." autocomplete="off"
+          autocorrect="off" autocapitalize="off" spellcheck="false">
         <button id="restart-btn" class="restart-btn" title="Restart (Tab + Enter)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+          </svg>
         </button>
       </div>
       <p class="hint-text">Press <kbd>Tab</kbd> + <kbd>Enter</kbd> to restart</p>
@@ -184,16 +254,36 @@
           <button class="auth-tab active" data-tab="login">Login</button>
           <button class="auth-tab" data-tab="register">Register</button>
         </div>
-        
+
         <!-- Login Form -->
         <form id="login-form" class="auth-form">
           <div class="form-header">
             <h2>Welcome Back</h2>
             <p>Login to sync your progress across devices</p>
           </div>
+          <button type="button" id="google-login-btn" class="btn-secondary w-full"
+            style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: var(--card-bg);">
+            <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4" />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853" />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z"
+                fill="#FBBC05" />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335" />
+            </svg>
+            Sign in with Google
+          </button>
+          <div style="text-align: center; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.85rem;">or use
+            email</div>
           <div class="form-group">
-            <label for="login-username">Username</label>
-            <input type="text" id="login-username" placeholder="Enter your username" required>
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" placeholder="you@example.com" required>
           </div>
           <div class="form-group">
             <label for="login-password">Password</label>
@@ -209,10 +299,26 @@
             <h2>Create Account</h2>
             <p>Join TypeTrack Pro and master your typing</p>
           </div>
-          <div class="form-group">
-            <label for="reg-username">Username</label>
-            <input type="text" id="reg-username" placeholder="Choose a username" required>
-          </div>
+          <button type="button" id="google-register-btn" class="btn-secondary w-full"
+            style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: var(--card-bg);">
+            <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4" />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853" />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z"
+                fill="#FBBC05" />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335" />
+            </svg>
+            Sign up with Google
+          </button>
+          <div style="text-align: center; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.85rem;">or use
+            email</div>
           <div class="form-group">
             <label for="reg-email">Email Address</label>
             <input type="email" id="reg-email" placeholder="you@example.com" required>
@@ -241,7 +347,7 @@
             <button class="pill" data-level="hard">Hard</button>
           </div>
         </div>
-        
+
         <!-- Game Selector Cards -->
         <div class="game-cards-grid">
           <div class="game-select-card balloon-card" data-game="balloon">
@@ -324,7 +430,8 @@
           <canvas id="balloon-canvas"></canvas>
         </div>
         <div class="game-input-bar">
-          <input type="text" id="balloon-input" class="game-input" placeholder="Type the word..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="balloon-input" class="game-input" placeholder="Type the word..." autocomplete="off"
+            autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
       </div>
 
@@ -344,7 +451,8 @@
         </div>
         <div class="game-input-bar">
           <div class="stack-word-display" id="stack-word-display">Start typing...</div>
-          <input type="text" id="stack-input" class="game-input" placeholder="Type the word..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="stack-input" class="game-input" placeholder="Type the word..." autocomplete="off"
+            autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
       </div>
 
@@ -363,7 +471,8 @@
           <canvas id="shooter-canvas"></canvas>
         </div>
         <div class="game-input-bar">
-          <input type="text" id="shooter-input" class="game-input" placeholder="Type words to shoot..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="shooter-input" class="game-input" placeholder="Type words to shoot..."
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
       </div>
 
@@ -380,7 +489,8 @@
         </div>
         <div class="ta-play-area">
           <div class="ta-word-big" id="ta-current-word">Press Enter to start</div>
-          <input type="text" id="ta-input" class="game-input game-input-lg" placeholder="Type the word..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="ta-input" class="game-input game-input-lg" placeholder="Type the word..."
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
           <div class="ta-word-queue" id="ta-queue"></div>
         </div>
       </div>
@@ -401,7 +511,8 @@
           <canvas id="survival-canvas"></canvas>
         </div>
         <div class="game-input-bar">
-          <input type="text" id="survival-input" class="game-input" placeholder="Type to survive..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="survival-input" class="game-input" placeholder="Type to survive..." autocomplete="off"
+            autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
       </div>
 
@@ -433,7 +544,11 @@
             <tbody id="lb-tbody"></tbody>
           </table>
           <div class="empty-state" id="lb-empty">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4m-2-2v4m6-1h.01m4 0h.01"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 12h4m-2-2v4m6-1h.01m4 0h.01" />
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+            </svg>
             <p>No game scores yet. Play some games to see your scores here!</p>
           </div>
         </div>
@@ -471,7 +586,13 @@
       <div class="summary-cards">
         <div class="summary-card gradient-1">
           <div class="summary-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M11 19c-1.7 0-3-1.3-3-3v-2h8v2c0 1.7-1.3 3-3 3h-2z"/><path d="M12 22v-3"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m13 2-2 2.5h3L12 7" />
+              <path d="M10 14v-3" />
+              <path d="M14 14v-3" />
+              <path d="M11 19c-1.7 0-3-1.3-3-3v-2h8v2c0 1.7-1.3 3-3 3h-2z" />
+              <path d="M12 22v-3" />
+            </svg>
           </div>
           <div class="summary-data">
             <div class="summary-value" id="dash-best-wpm">0</div>
@@ -480,7 +601,9 @@
         </div>
         <div class="summary-card gradient-2">
           <div class="summary-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
           </div>
           <div class="summary-data">
             <div class="summary-value" id="dash-avg-wpm">0</div>
@@ -489,7 +612,10 @@
         </div>
         <div class="summary-card gradient-3">
           <div class="summary-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
           </div>
           <div class="summary-data">
             <div class="summary-value" id="dash-avg-acc">0%</div>
@@ -498,7 +624,10 @@
         </div>
         <div class="summary-card gradient-4">
           <div class="summary-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
           </div>
           <div class="summary-data">
             <div class="summary-value" id="dash-total-time">0m</div>
@@ -507,7 +636,12 @@
         </div>
         <div class="summary-card gradient-5">
           <div class="summary-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
           </div>
           <div class="summary-data">
             <div class="summary-value" id="dash-sessions">0</div>
@@ -544,7 +678,12 @@
             <tbody id="recent-tbody"></tbody>
           </table>
           <div class="empty-state" id="dash-empty">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 16h10"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="M7 16h10" />
+              <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01" />
+            </svg>
             <p>No sessions yet. Start practicing to see your progress!</p>
           </div>
         </div>
@@ -558,7 +697,11 @@
       <div class="dash-header">
         <h1>Session History</h1>
         <button class="btn-danger" id="clear-history-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
           Clear All
         </button>
       </div>
@@ -596,7 +739,11 @@
       <!-- History Cards -->
       <div class="history-list" id="history-list"></div>
       <div class="empty-state" id="history-empty">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
         <p>No session history yet. Complete a typing session to see it here!</p>
       </div>
     </div>
@@ -611,7 +758,11 @@
       </div>
       <div class="profile-body">
         <div class="profile-avatar" id="profile-avatar">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
         </div>
         <div class="profile-name-group">
           <label class="setting-label">Display Name</label>
@@ -645,7 +796,49 @@
     </div>
   </div>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, updateProfile } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      // TODO: Replace with your Firebase configuration object
+      apiKey: "AIzaSyBvvGX2R8NGZXCwNLfF0-84UeGQrwXQWTY",
+      authDomain: "typetrack-pro.firebaseapp.com",
+      projectId: "typetrack-pro",
+      storageBucket: "typetrack-pro.firebasestorage.app",
+      messagingSenderId: "285399107756",
+      appId: "1:285399107756:web:077d87626076bde864b709"
+
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    window.fb = {
+      auth,
+      db,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      GoogleAuthProvider,
+      provider,
+      signInWithPopup,
+      updateProfile,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      where,
+      orderBy,
+      limit
+    };
+  </script>
   <script src="app.js"></script>
   <script src="games.js"></script>
 </body>
+
 </html>

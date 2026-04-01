@@ -119,7 +119,7 @@ const dom = {
   loginForm: $('#login-form'),
   registerForm: $('#register-form'),
   loginError: $('#login-error'),
-  registerError: $('#register-error'),
+  registerError: $('#reg-error'),
 };
 
 // ─── Sound Engine ──────────────────────────────────────────
@@ -272,16 +272,12 @@ function finishSession() {
 }
 
 async function syncSessionWithBackend(session) {
+  if (!state.isLoggedIn || !window.fb || !state.user) return;
   try {
-    const res = await fetch(`${API_URL}/sessions`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${state.token}`
-      },
-      body: JSON.stringify(session)
+    await window.fb.addDoc(window.fb.collection(window.fb.db, 'sessions'), {
+      ...session,
+      uid: state.user.uid
     });
-    if (!res.ok) console.error('Failed to sync session');
   } catch (err) {
     console.error('Error syncing session:', err);
   }
@@ -406,80 +402,87 @@ function initAuthView() {
 }
 
 // ─── Authentication Logic ──────────────────────────────────
+async function handleGoogleLogin(e) {
+  e.preventDefault();
+  dom.loginError.classList.remove('active');
+  try {
+    await window.fb.signInWithPopup(window.fb.auth, window.fb.provider);
+    // loginUser is handled by onAuthStateChanged
+  } catch (err) {
+    dom.loginError.textContent = err.message || 'Google Sign-In failed';
+    dom.loginError.classList.add('active');
+  }
+}
+
+async function handleGoogleRegister(e) {
+  e.preventDefault();
+  dom.registerError.classList.remove('active');
+  try {
+    await window.fb.signInWithPopup(window.fb.auth, window.fb.provider);
+    // onAuthStateChanged will trigger
+  } catch (err) {
+    dom.registerError.textContent = err.message || 'Google Sign-Up failed';
+    dom.registerError.classList.add('active');
+  }
+}
+
 async function handleLogin(e) {
   e.preventDefault();
-  const username = $('#login-username').value;
+  const email = $('#login-email').value;
   const password = $('#login-password').value;
   dom.loginError.classList.remove('active');
 
   try {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
-    });
-    const data = await res.json();
-    if (res.ok) {
-      loginUser(data);
-    } else {
-      dom.loginError.textContent = data.error || 'Login failed';
-      dom.loginError.classList.add('active');
-    }
+    await window.fb.signInWithEmailAndPassword(window.fb.auth, email, password);
   } catch (err) {
-    dom.loginError.textContent = 'Server connection error';
+    dom.loginError.textContent = err.message || 'Login failed';
     dom.loginError.classList.add('active');
   }
 }
 
 async function handleRegister(e) {
   e.preventDefault();
-  const username = $('#reg-username').value;
   const email = $('#reg-email').value;
   const password = $('#reg-password').value;
   dom.registerError.classList.remove('active');
 
   try {
-    const res = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
-    });
-    const data = await res.json();
-    if (res.ok) {
-      loginUser(data);
-    } else {
-      dom.registerError.textContent = data.error || 'Registration failed';
-      dom.registerError.classList.add('active');
-    }
+    const userCredential = await window.fb.createUserWithEmailAndPassword(window.fb.auth, email, password);
+    const username = email.split('@')[0];
+    await window.fb.updateProfile(userCredential.user, { displayName: username });
   } catch (err) {
-    dom.registerError.textContent = 'Server connection error';
+    dom.registerError.textContent = err.message || 'Registration failed';
     dom.registerError.classList.add('active');
   }
 }
 
-function loginUser(data) {
-  state.token = data.token;
-  state.user = { username: data.username, role: data.role };
+function loginUser(firebaseUser) {
+  state.user = { 
+    uid: firebaseUser.uid, 
+    username: firebaseUser.displayName || firebaseUser.email.split('@')[0],
+    email: firebaseUser.email
+  };
   state.isLoggedIn = true;
-  localStorage.setItem('typetrack_token', data.token);
   localStorage.setItem('typetrack_user', JSON.stringify(state.user));
   updateAuthUI();
   fetchUserData();
-  switchView('practice');
+  if ($('#view-auth').classList.contains('active')) {
+    switchView('practice');
+  }
 }
 
-function logoutUser() {
-  state.token = null;
+async function logoutUser() {
+  if (!window.fb) return;
+  await window.fb.signOut(window.fb.auth);
   state.user = null;
   state.isLoggedIn = false;
-  localStorage.removeItem('typetrack_token');
   localStorage.removeItem('typetrack_user');
   updateAuthUI();
   switchView('practice');
 }
 
 function updateAuthUI() {
-  if (state.isLoggedIn) {
+  if (state.isLoggedIn && state.user) {
     dom.authNavBtn.classList.add('hidden');
     dom.userDisplay.classList.remove('hidden');
     dom.userNameLabel.textContent = state.user.username;
@@ -490,19 +493,22 @@ function updateAuthUI() {
 }
 
 async function fetchUserData() {
-  if (!state.isLoggedIn) return;
+  if (!state.isLoggedIn || !window.fb || !state.user) return;
   try {
-    const res = await fetch(`${API_URL}/sessions`, {
-      headers: { 'Authorization': `Bearer ${state.token}` }
+    const q = window.fb.query(window.fb.collection(window.fb.db, 'sessions'), window.fb.where('uid', '==', state.user.uid));
+    const querySnapshot = await window.fb.getDocs(q);
+    const sessions = [];
+    querySnapshot.forEach((doc) => {
+      sessions.push(doc.data());
     });
-    if (res.ok) {
-      const sessions = await res.json();
-      if (sessions.length > 0) {
-        state.sessions = sessions;
-        localStorage.setItem('typetrack_sessions', JSON.stringify(state.sessions));
-        if ($('#view-dashboard').classList.contains('active')) buildDashboard();
-        if ($('#view-history').classList.contains('active')) buildHistory();
-      }
+    
+    sessions.sort((a,b) => new Date(b.date) - new Date(a.date));
+    
+    if (sessions.length > 0) {
+      state.sessions = sessions;
+      localStorage.setItem('typetrack_sessions', JSON.stringify(state.sessions));
+      if ($('#view-dashboard').classList.contains('active')) buildDashboard();
+      if ($('#view-history').classList.contains('active')) buildHistory();
     }
   } catch (err) {
     console.error('Error fetching user data:', err);
@@ -513,6 +519,28 @@ dom.loginForm.addEventListener('submit', handleLogin);
 dom.registerForm.addEventListener('submit', handleRegister);
 dom.logoutBtn.addEventListener('click', logoutUser);
 dom.authNavBtn.addEventListener('click', () => switchView('auth'));
+
+const googleLoginBtn = $('#google-login-btn');
+if (googleLoginBtn) googleLoginBtn.addEventListener('click', handleGoogleLogin);
+const googleRegisterBtn = $('#google-register-btn');
+if (googleRegisterBtn) googleRegisterBtn.addEventListener('click', handleGoogleRegister);
+
+// Setup Auth State Listener when window.fb is ready
+const checkFb = setInterval(() => {
+  if (window.fb && window.fb.auth) {
+    clearInterval(checkFb);
+    window.fb.onAuthStateChanged(window.fb.auth, (user) => {
+      if (user) {
+        loginUser(user);
+      } else {
+        state.user = null;
+        state.isLoggedIn = false;
+        localStorage.removeItem('typetrack_user');
+        updateAuthUI();
+      }
+    });
+  }
+}, 100);
 
 $$('.auth-tab').forEach(tab => tab.addEventListener('click', () => {
   $$('.auth-tab').forEach(t => t.classList.remove('active'));

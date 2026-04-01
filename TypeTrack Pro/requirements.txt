@@ -1,7 +1,0 @@
-flask
-flask-cors
-flask-bcrypt
-flask-jwt-extended
-postgrest-py
-httpx
-python-dotenv

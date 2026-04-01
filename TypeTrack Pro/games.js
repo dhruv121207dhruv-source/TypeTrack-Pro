@@ -561,16 +561,13 @@ function saveGameScore(game, score, level) {
 }
 
 async function syncScoreWithBackend(scoreData) {
+  if (!state.isLoggedIn || !window.fb || !state.user) return;
   try {
-    const res = await fetch(`${API_URL}/scores`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${state.token}`
-      },
-      body: JSON.stringify(scoreData)
+    await window.fb.addDoc(window.fb.collection(window.fb.db, 'scores'), {
+      ...scoreData,
+      uid: state.user.uid,
+      username: state.user.username
     });
-    if (!res.ok) console.error('Failed to sync score');
   } catch (err) {
     console.error('Error syncing score:', err);
   }
@@ -591,14 +588,22 @@ $$('#lb-game-filter .pill').forEach(btn => btn.addEventListener('click', () => {
 }));
 
 async function buildLeaderboard(filter) {
-  if (state.isLoggedIn) {
+  if (state.isLoggedIn && window.fb) {
     try {
-      const res = await fetch(`${API_URL}/leaderboard?game=${filter}`);
-      if (res.ok) {
-        const globalData = await res.json();
-        renderLeaderboard(globalData, true);
-        return;
+      let q;
+      const scoresRef = window.fb.collection(window.fb.db, 'scores');
+      if (filter === 'all') {
+        q = window.fb.query(scoresRef, window.fb.orderBy('score', 'desc'), window.fb.limit(50));
+      } else {
+        q = window.fb.query(scoresRef, window.fb.where('game', '==', filter), window.fb.orderBy('score', 'desc'), window.fb.limit(50));
       }
+      
+      const querySnapshot = await window.fb.getDocs(q);
+      const globalData = [];
+      querySnapshot.forEach(doc => globalData.push(doc.data()));
+      
+      renderLeaderboard(globalData, true);
+      return;
     } catch (err) {
       console.error('Error fetching global leaderboard:', err);
     }
