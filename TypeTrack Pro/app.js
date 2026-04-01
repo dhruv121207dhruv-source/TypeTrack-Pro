@@ -69,12 +69,9 @@ const state = {
   gameScores: JSON.parse(localStorage.getItem('typetrack_game_scores') || '[]'),
   gameLevel: 'easy',
   profile: JSON.parse(localStorage.getItem('typetrack_profile') || '{"name":"","joined":""}'),
-  token: localStorage.getItem('typetrack_token'),
   user: JSON.parse(localStorage.getItem('typetrack_user') || 'null'),
-  isLoggedIn: !!localStorage.getItem('typetrack_token'),
+  isLoggedIn: !!localStorage.getItem('typetrack_user'),
 };
-
-const API_URL = 'http://localhost:5000/api';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
@@ -463,6 +460,7 @@ function loginUser(firebaseUser) {
     email: firebaseUser.email
   };
   state.isLoggedIn = true;
+  state.sessions = []; // Clear old local data
   localStorage.setItem('typetrack_user', JSON.stringify(state.user));
   updateAuthUI();
   fetchUserData();
@@ -476,16 +474,25 @@ async function logoutUser() {
   await window.fb.signOut(window.fb.auth);
   state.user = null;
   state.isLoggedIn = false;
+  state.sessions = [];
   localStorage.removeItem('typetrack_user');
+  localStorage.removeItem('typetrack_sessions');
   updateAuthUI();
-  switchView('practice');
+  if ($('#view-dashboard').classList.contains('active') || $('#view-history').classList.contains('active')) {
+    switchView('practice');
+  } else {
+    updateAuthUI();
+  }
 }
 
 function updateAuthUI() {
   if (state.isLoggedIn && state.user) {
     dom.authNavBtn.classList.add('hidden');
     dom.userDisplay.classList.remove('hidden');
-    dom.userNameLabel.textContent = state.user.username;
+    
+    // Truncate long display names
+    const name = state.user.username;
+    dom.userNameLabel.textContent = name.length > 15 ? name.substring(0, 12) + '...' : name;
   } else {
     dom.authNavBtn.classList.remove('hidden');
     dom.userDisplay.classList.add('hidden');
@@ -504,12 +511,11 @@ async function fetchUserData() {
     
     sessions.sort((a,b) => new Date(b.date) - new Date(a.date));
     
-    if (sessions.length > 0) {
-      state.sessions = sessions;
-      localStorage.setItem('typetrack_sessions', JSON.stringify(state.sessions));
-      if ($('#view-dashboard').classList.contains('active')) buildDashboard();
-      if ($('#view-history').classList.contains('active')) buildHistory();
-    }
+    state.sessions = sessions;
+    localStorage.setItem('typetrack_sessions', JSON.stringify(state.sessions));
+    
+    if ($('#view-dashboard').classList.contains('active')) buildDashboard();
+    if ($('#view-history').classList.contains('active')) buildHistory();
   } catch (err) {
     console.error('Error fetching user data:', err);
   }
