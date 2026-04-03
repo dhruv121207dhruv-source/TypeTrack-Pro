@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Intro Screen -->
+    <div id="intro-screen">
+        <div class="intro-content">
+            <div class="intro-cake">
+                <div class="css-cake">
+                    <div class="candle">
+                        <div class="flame"></div>
+                        <div class="smoke"></div>
+                    </div>
+                    <div class="tier top-tier"></div>
+                    <div class="tier middle-tier">
+                        <div class="sprinkle s1"></div>
+                        <div class="sprinkle s2"></div>
+                        <div class="sprinkle s3"></div>
+                        <div class="sprinkle s4"></div>
+                        <div class="sprinkle s5"></div>
+                    </div>
+                    <div class="tier bottom-tier"></div>
+                </div>
+            </div>
+            <p class="intro-text">Make a wish...</p>
+            <button id="blow-candle-btn" class="btn">Blow the Candle 🌬️</button>
+        </div>
+    </div>
+
+    <!-- Photo Showcase Screen -->
+    <div id="photo-showcase-screen" class="hidden">
+        <div class="showcase-content">
+            <h2 class="showcase-title">Unforgettable Moments</h2>
+            <div class="polaroid-gallery">
+                <div class="polaroid p-1">
+                    <div class="photo-placeholder memory-placeholder">
+                        <span class="placeholder-text">Add Memorable Photo 1</span>
+                    </div>
+                </div>
+                <div class="polaroid p-2">
+                    <div class="photo-placeholder memory-placeholder">
+                        <span class="placeholder-text">Add Memorable Photo 2</span>
+                    </div>
+                </div>
+                <div class="polaroid p-3">
+                    <div class="photo-placeholder memory-placeholder">
+                        <span class="placeholder-text">Add Memorable Photo 3</span>
+                    </div>
+                </div>
+            </div>
+            <button id="enter-website-btn" class="btn">Enter Website ✨</button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero hidden-section" id="home">
+        <div class="hero-content">
+            <h1 class="hero-title">Happy Birthday</h1>
+            <h2 class="hero-name">Beautiful Soul 🎉</h2>
+            <p class="hero-subtitle">Wishing you a day filled with love, joy, and endless smiles.</p>
+            <div class="scroll-indicator">
+                <span>Scroll down</span>
+                <div class="arrow">⬇</div>
+            </div>
+        </div>
+        <div class="floating-elements">
+            <!-- These can be CSS bubbles, hearts, or confetti -->
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </section>
+
+    <!-- Photo & Message Section -->
+    <section class="message-section hidden-section" id="message">
+        <div class="container message-container">
+            <div class="message-image">
+                <div class="photo-placeholder" id="main-portrait">
+                    <span class="placeholder-text">Add Main Focus Photo Here</span>
+                </div>
+                <div class="image-border"></div>
+            </div>
+            <div class="message-text">
+                <h3>To Someone Special,</h3>
+                <p>On this beautiful day, I just want to remind you how wonderfully loved you are. Your smile lights up every room, and your kindness is a gift to everyone around you. May this year bring you as much happiness as you bring to others. Never lose that beautiful spark that makes you, YOU. ❤️</p>
+                <button class="btn warm-wishes-btn">Send Warm Wishes</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Memories Section -->
+    <section class="memories-section hidden-section" id="memories">
+        <div class="container">
+            <h2 class="section-title">Sweetest Memories</h2>
+            <p class="section-subtitle">Moments we'll always cherish</p>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <div class="photo-placeholder memory-placeholder">
+                        <span class="placeholder-text">Add Memory Photo 1</span>
+                    </div>
+                    <div class="overlay"><span>Joy</span></div>
+                </div>
+                <div class="gallery-item">
+                    <div class="photo-placeholder memory-placeholder">
+                        <span class="placeholder-text">Add Memory Photo 2</span>
+                    </div>
+                    <div class="overlay"><span>Celebration</span></div>
+                </div>
+                <div class="gallery-item">
+                    <div class="photo-placeholder memory-placeholder">
+                        <span class="placeholder-text">Add Memory Photo 3</span>
+                    </div>
+                    <div class="overlay"><span>Love</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Wishes Section -->
+    <section class="wishes-section hidden-section" id="wishes">
+        <div class="container wishes-container">
+            <h2 class="section-title">A Special Wish For You</h2>
+            <div class="wish-card">
+                <p class="wish-quote">"Count your life by smiles, not tears. Count your age by friends, not years. Happy Birthday!"</p>
+                <p class="wish-sender">— With all my love</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made with ❤️ just for you.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
